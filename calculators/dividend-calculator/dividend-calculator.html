@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advanced Dividend Calculator | Easy Finance Tools</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4262496331692202" crossorigin="anonymous"></script>
+</head>
+<body class="bg-white text-[#1B5E20]">
+  <header class="flex justify-between items-center px-6 py-4 shadow-md bg-[#F9A825]">
+    <a href="../../index.html" class="flex items-center space-x-2">
+      <div class="w-10 h-10 bg-[#1B5E20] rounded-full flex items-center justify-center text-white font-bold text-sm">EFT</div>
+      <span class="text-xl font-semibold text-white">Easy Finance Tools</span>
+    </a>
+    <nav>
+      <ul class="hidden md:flex space-x-4 text-white font-medium">
+        <li><a href="../../index.html" class="hover:underline">Home</a></li>
+        <li><a href="advanced-dividend-calculator.html" class="hover:underline">Calculator</a></li>
+        <li><a href="../../blog/index.html" class="hover:underline">Blog</a></li>
+        <li><a href="../../news/index.html" class="hover:underline">News</a></li>
+        <li><a href="../../about.html" class="hover:underline">About</a></li>
+        <li><a href="../../contact.html" class="hover:underline">Contact</a></li>
+        <li><a href="../../privacy.html" class="hover:underline">Privacy</a></li>
+        <li><a href="../../terms.html" class="hover:underline">Terms</a></li>
+      </ul>
+    </nav>
+  </header>
+  <div class="bg-[#1B5E20] text-white text-center py-2 text-sm font-medium tracking-wide shadow">
+    Trusted Free Tools for Smarter Investing
+  </div>
+
+  <main class="max-w-4xl mx-auto py-12 px-4">
+    <h1 class="text-3xl font-bold mb-6 text-center">Advanced Dividend Calculator</h1>
+
+    <div class="grid gap-4">
+      <label>Investment Amount (CAD): <input type="number" id="investment" class="border rounded p-2 w-full" /></label>
+      <label>Years to Project: <input type="number" id="years" value="10" class="border rounded p-2 w-full" /></label>
+      <label>Dividend Frequency:
+        <select id="frequency" class="border rounded p-2 w-full">
+          <option value="weekly">Weekly</option>
+          <option value="monthly" selected>Monthly</option>
+          <option value="quarterly">Quarterly</option>
+          <option value="yearly">Yearly</option>
+        </select>
+      </label>
+      <label class="inline-flex items-center">
+        <input type="checkbox" id="drip" checked class="mr-2" />
+        Reinvest Dividends (DRIP)
+      </label>
+    </div>
+
+    <div class="my-6 p-4 bg-gray-50 border rounded">
+      <h2 class="font-semibold mb-4">Enter Last 12 Dividends (CAD):</h2>
+      <div class="grid grid-cols-2 gap-2">
+        <input id="div1" type="number" placeholder="Dividend 1" class="border p-2 rounded" />
+<input id="div2" type="number" placeholder="Dividend 2" class="border p-2 rounded" />
+<input id="div3" type="number" placeholder="Dividend 3" class="border p-2 rounded" />
+<input id="div4" type="number" placeholder="Dividend 4" class="border p-2 rounded" />
+<input id="div5" type="number" placeholder="Dividend 5" class="border p-2 rounded" />
+<input id="div6" type="number" placeholder="Dividend 6" class="border p-2 rounded" />
+<input id="div7" type="number" placeholder="Dividend 7" class="border p-2 rounded" />
+<input id="div8" type="number" placeholder="Dividend 8" class="border p-2 rounded" />
+<input id="div9" type="number" placeholder="Dividend 9" class="border p-2 rounded" />
+<input id="div10" type="number" placeholder="Dividend 10" class="border p-2 rounded" />
+<input id="div11" type="number" placeholder="Dividend 11" class="border p-2 rounded" />
+<input id="div12" type="number" placeholder="Dividend 12" class="border p-2 rounded" />
+      </div>
+    </div>
+
+    <button onclick="calculateDividends()" class="bg-[#1B5E20] text-white px-6 py-2 rounded hover:bg-green-800 mt-4">Calculate</button>
+
+    <div id="output" class="mt-8 text-lg text-gray-800"></div>
+
+    <div class="mt-10">
+      <canvas id="dividendChart"></canvas>
+    </div>
+  </main>
+
+  <footer class="bg-[#F9A825] text-white text-center py-6 mt-12">
+    <p>&copy; 2025 Easy Finance Tools. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function calculateDividends() {
+      const investment = parseFloat(document.getElementById("investment").value);
+      const years = parseInt(document.getElementById("years").value);
+      const frequency = document.getElementById("frequency").value;
+      const drip = document.getElementById("drip").checked;
+
+      const freqMap = { weekly: 52, monthly: 12, quarterly: 4, yearly: 1 };
+      const periods = freqMap[frequency];
+
+      let dividends = [];
+      for (let i = 1; i <= 12; i++) {
+        const val = parseFloat(document.getElementById(`div${i}`).value);
+        if (!isNaN(val)) dividends.push(val);
+      }
+
+      if (!investment || dividends.length === 0) {
+        document.getElementById("output").innerHTML = "<p>Please enter investment and dividend values.</p>";
+        return;
+      }
+
+      const avgDiv = dividends.reduce((a, b) => a + b, 0) / dividends.length;
+      const annualDividend = avgDiv * periods;
+      const yieldPercent = (annualDividend / investment * 100).toFixed(2);
+      const monthlyYield = (annualDividend / 12).toFixed(2);
+      const weeklyYield = (annualDividend / 52).toFixed(2);
+
+      document.getElementById("output").innerHTML = `
+        <strong>Annual Dividend:</strong> $${annualDividend.toFixed(2)}<br/>
+        <strong>Dividend Yield:</strong> ${yieldPercent}%<br/>
+        <strong>Monthly Yield:</strong> $${monthlyYield}<br/>
+        <strong>Weekly Yield:</strong> $${weeklyYield}
+      `;
+
+      let value = investment;
+      const labels = [];
+      const data = [];
+
+      for (let y = 1; y <= years; y++) {
+        if (drip) value += annualDividend;
+        labels.push("Year " + y);
+        data.push(value.toFixed(2));
+      }
+
+      const ctx = document.getElementById("dividendChart").getContext("2d");
+      if (window.divChart) window.divChart.destroy();
+      window.divChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "Projected Value (CAD)",
+            data: data,
+            borderColor: "#1B5E20",
+            fill: false
+          }]
+        }
+      });
+    }
+  </script>
+</body>
+</html>

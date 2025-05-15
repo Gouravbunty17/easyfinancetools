@@ -1,0 +1,1 @@
+console.log('Dividend calculator script loaded');
